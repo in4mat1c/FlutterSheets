@@ -1,6 +1,5 @@
-import asyncio
-import database
-
+from table import Table
+from database import Database
 from flet import (animation,
                   border,
                   ClipBehavior,
@@ -15,14 +14,17 @@ from flet import (animation,
                   Text,
                   TextField,
                   TextSpan,
-                  UserControl)
+                  UserControl
+                  )
 
 
 class DropDownSearchBar(UserControl):
+    controls_list = {}
 
     def __init__(self):
-        self.controls_list = {}
         self.item_number = Text(size=9, italic=True, color="black")
+        self.database = Database('database')
+        self.table = Table()
         super().__init__()
 
     def check_instance(self, e, height):
@@ -40,15 +42,16 @@ class DropDownSearchBar(UserControl):
         obj.height = 50
         obj.update()
 
-    def FindBlind(self, e):
+    def get_blind(self, e):
         obj = self.controls_list["search"]
-        obj.height = 50
+        self.controls_list['table_name'] = e.control.text.replace(' ', '_')
         obj.content.controls[0].controls[1].value = e.control.text
-        self.item_number.update()
+        self.table.get_table_values(self.controls_list['table_name'])
+        obj.height = 50
         obj.update()
 
-    async def filter_data_table(self, e):
-        records = await database.Database.get_tables_name()
+    def filter_data_table(self, e):
+        records = self.database.get_table_names()
         obj = self.controls_list["search"]
         for data in obj.content.controls[1].controls[:]:
             obj.content.controls[1].controls.remove(data)
@@ -61,7 +64,7 @@ class DropDownSearchBar(UserControl):
             count = 0
             for names in records:
                 for name in names:
-                    if e.data.lower() in name.lower():
+                    if e.data.lower() in name.lower().replace('_', ' '):
                         obj.content.controls[1].controls.append(
                             Row(
                                 visible=True,
@@ -69,8 +72,8 @@ class DropDownSearchBar(UserControl):
                                 controls=[
                                     Text(size=14, spans=[
                                         TextSpan(
-                                            name,
-                                            on_click=lambda e: asyncio.run(self.FindBlind(e))
+                                            name.replace('_', ' '),
+                                            on_click=lambda e: self.get_blind(e)
                                         )
                                     ]),
                                     Text("name", italic=True, size=10, color="black"),
@@ -84,7 +87,7 @@ class DropDownSearchBar(UserControl):
 
     def drop_down_search(self):
         _object_ = Container(
-            width=450,
+            width=354,
             height=50,
             bgcolor="white10",
             border=border.all(1, 'black'),
@@ -113,9 +116,7 @@ class DropDownSearchBar(UserControl):
                                 cursor_color="black",
                                 cursor_width=1,
                                 hint_text="Поиск...",
-                                on_change=lambda e: asyncio.run(
-                                    self.filter_data_table(e)
-                                ),
+                                on_change=lambda e: self.filter_data_table(e)
                             ),
                             self.item_number,
                         ],
@@ -130,5 +131,3 @@ class DropDownSearchBar(UserControl):
         self.controls_list["search"] = _object_
         return _object_
 
-    def build(self):
-        return self.drop_down_search()
