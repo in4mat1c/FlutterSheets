@@ -1,21 +1,22 @@
 from table import Table
 from database import Database
-from flet import (animation,
-                  border,
-                  ClipBehavior,
-                  Container,
-                  Column,
-                  CrossAxisAlignment,
-                  Icon,
-                  icons,
-                  MainAxisAlignment,
-                  padding,
-                  Row,
-                  Text,
-                  TextField,
-                  TextSpan,
-                  UserControl
-                  )
+from flet import (
+    animation,
+    border,
+    ClipBehavior,
+    Container,
+    Column,
+    CrossAxisAlignment,
+    Icon,
+    icons,
+    MainAxisAlignment,
+    padding,
+    Row,
+    Text,
+    TextField,
+    TextSpan,
+    UserControl
+    )
 
 
 class DropDownSearchBar(UserControl):
