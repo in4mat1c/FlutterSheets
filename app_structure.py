@@ -1,32 +1,16 @@
-import asyncio
-
 import flet
-
-import database
-
-from flet import (animation,
-                  border,
-                  ClipBehavior,
-                  Container,
-                  Column,
-                  CrossAxisAlignment,
-                  Icon,
-                  icons,
-                  MainAxisAlignment,
-                  padding,
-                  Row,
-                  Text,
-                  TextField,
-                  TextSpan,
-                  UserControl
-                  )
+from flet import (
+    Column,
+    UserControl
+    )
 
 from search import DropDownSearchBar
 from top import TopNavigationBlock
 from table import Table
+from user import User
 
 
-class MainBlock(UserControl):
+class App(UserControl):
 
     def __init__(self):
         self.search = DropDownSearchBar()
@@ -34,6 +18,7 @@ class MainBlock(UserControl):
         self.table = Table()
         super().__init__()
 
+    # Main build to create application structure
     def build(self):
         _object_ = Column()
         _object_.controls.append(self.top_bar.create())
