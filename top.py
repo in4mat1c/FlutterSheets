@@ -1,3 +1,5 @@
+from table import Table
+from tableDesign import TableDesign
 from flet import (CircleAvatar,
                   ClipBehavior,
                   Container,
@@ -15,14 +17,18 @@ from flet import (CircleAvatar,
                   Icon,
                   )
 
-from table import Table
-from tableDesign import TableDesign
 
 class TopNavigationBlock(UserControl):
     def __init__(self):
         self.controls_list = {}
         self.table = Table()
         super().__init__()
+
+    @classmethod
+    def get_username_symbols(cls):
+        username = Table.controls_list['user'].username
+        parts = username.split()
+        return parts[0][0] + parts[-1][0]
 
     def check_discount_click(self, e):
         obj = self.controls_list["top"]
@@ -53,12 +59,12 @@ class TopNavigationBlock(UserControl):
                         alignment=MainAxisAlignment.SPACE_BETWEEN,
                         controls=[
                             CircleAvatar(
-                                foreground_image_url="https://avatars.githubusercontent.com/u/132345733?v=4",
+                                # foreground_image_url="https://avatars.githubusercontent.com/u/132345733?v=4", Add Custom Avatars
                                 width=40,
                                 height=40,
                                 bgcolor=colors.RED_400,
                                 color=colors.WHITE,
-                                content=Text("ЛТ"), # Add Username Like by Symbols
+                                content=Text(value=self.get_username_symbols()),
                             ),
                             Container(),
                             Container(
@@ -71,6 +77,8 @@ class TopNavigationBlock(UserControl):
                                                    tooltip='Добавление новой строки в таблицу', on_click=self.add_string),
                                         IconButton(icons.ATTACH_FILE, icon_size=20, icon_color='white',
                                                    tooltip='Прикрепление фото'),
+                                        IconButton(icons.IMAGE_ROUNDED, icon_size=20, icon_color='white',
+                                                   tooltip='Просмотр фото'),
                                         IconButton(icons.ADDCHART_ROUNDED, icon_size=20, icon_color='white',
                                                    tooltip='Добавление новой ткани'),
                                         IconButton(icons.DELETE_ROUNDED, icon_size=20, icon_color='white',
@@ -103,6 +111,10 @@ class TopNavigationBlock(UserControl):
         )
         self.controls_list["top"] = _object_
         return _object_
+
+    def top_bar_buttons(self):
+        obj = self.controls_list['top']
+        # Divide buttons to different users
 
     def add_string(self, e):
         obj = Table.controls_list['table']
